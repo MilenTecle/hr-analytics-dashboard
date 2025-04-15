@@ -1,0 +1,32 @@
+-- Create the employees table for HR dashboard
+
+CREATE TABLE employees (
+    age INTEGER,
+    attrition TEXT,
+    business_travel TEXT,
+    department TEXT,
+    distance_from_home INTEGER,
+    education INTEGER,
+    education_field TEXT,
+    environment_satisfaction INTEGER,
+    gender TEXT,
+    job_involvement INTEGER,
+    job_level INTEGER,
+    job_role TEXT,
+    job_satisfaction INTEGER,
+    marital_status TEXT,
+    monthly_income INTEGER,
+    num_companies_worked INTEGER,
+    over_time TEXT,
+    percent_salary_hike INTEGER,
+    performance_rating INTEGER,
+    relationship_satisfaction INTEGER,
+    stock_option_level INTEGER,
+    total_working_years INTEGER,
+    training_times_last_year INTEGER,
+    work_life_balance INTEGER,
+    years_at_company INTEGER,
+    years_in_current_role INTEGER,
+    years_since_last_promotion INTEGER,
+    years_with_curr_manager INTEGER
+);
