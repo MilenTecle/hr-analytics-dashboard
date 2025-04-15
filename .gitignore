@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -172,3 +173,17 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+=======
+# Virtual environment
+venv/
+
+# VS Code settings (optional but helpful)
+.vscode/
+
+# Data files
+*.csv
+
+# OS files
+.DS_Store
+Thumbs.db
+>>>>>>> 7f0fc82 (Initial commit – project setup and cleaned data script)
