@@ -9,6 +9,10 @@ from .database import Base
 class Employee(Base):
     __tablename__ = "employees"
 
+    # Required internal ID column for SQLAlchemy; original table has no primary key
+    __table_args__ = {'extend_existing': True}
+    row_id = Column(Integer, primary_key=True, autoincrement=True)
+
     # Columns match the structure of the employees table exactly
     age = Column(Integer)
     attrition = Column(String)
