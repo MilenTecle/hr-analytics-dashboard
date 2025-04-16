@@ -22,4 +22,5 @@ def read_root():
 # GET /employees - return all employees
 @app.get("/employees", response_model=list[schemas.EmployeeBase])
 def read_employees(db: Session = Depends(get_db)):
+    print("/employees was reached")
     return crud.get_all_employees(db)

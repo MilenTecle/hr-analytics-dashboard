@@ -1,28 +1,26 @@
 from sqlalchemy import Column, Integer, String
 from .database import Base
 
-
 # SQLAlchemy model that maps to the "employees" table in PostgreSQL
 # This defines the shape of our database table and lets us query it with Python
-
-
 class Employee(Base):
     __tablename__ = "employees"
 
-    # Required internal ID column for SQLAlchemy; original table has no primary key
+    # Use existing table in the database without modifying it
     __table_args__ = {'extend_existing': True}
-    row_id = Column(Integer, primary_key=True, autoincrement=True)
 
-    # Columns match the structure of the employees table exactly
-    age = Column(Integer)
+    # Add composite primary key to satisfy SQLAlchemy
+    age = Column(Integer, primary_key=True)
+    gender = Column(String, primary_key=True)
+    department = Column(String, primary_key=True)
+
+    # Remaining fields
     attrition = Column(String)
     business_travel = Column(String)
-    department = Column(String)
     distance_from_home = Column(Integer)
     education = Column(Integer)
     education_field = Column(String)
     environment_satisfaction = Column(Integer)
-    gender = Column(String)
     job_involvement = Column(Integer)
     job_level = Column(Integer)
     job_role = Column(String)
