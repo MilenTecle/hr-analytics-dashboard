@@ -2,41 +2,41 @@ from sqlalchemy import Column, Integer, String
 from .database import Base
 
 # SQLAlchemy model that maps to the "employees" table in PostgreSQL
-# This defines the shape of our database table and lets us query it with Python
 class Employee(Base):
     __tablename__ = "employees"
-
-    # Use existing table in the database without modifying it
     __table_args__ = {'extend_existing': True}
 
-    # Add composite primary key to satisfy SQLAlchemy
+    # Composite primary key
     age = Column(Integer, primary_key=True)
-    gender = Column(String, primary_key=True)
-    department = Column(String, primary_key=True)
+    gender = Column(String(10), primary_key=True)
+    department = Column(String(50), primary_key=True)
 
     # Remaining fields
-    attrition = Column(String)
-    business_travel = Column(String)
-    distance_from_home = Column(Integer)
+    attrition = Column(String(50))
+    businesstravel = Column(String(50))
+    dailyrate = Column(Integer)
+    distancefromhome = Column(Integer)
     education = Column(Integer)
-    education_field = Column(String)
-    environment_satisfaction = Column(Integer)
-    job_involvement = Column(Integer)
-    job_level = Column(Integer)
-    job_role = Column(String)
-    job_satisfaction = Column(Integer)
-    marital_status = Column(String)
-    monthly_income = Column(Integer)
-    num_companies_worked = Column(Integer)
-    over_time = Column(String)
-    percent_salary_hike = Column(Integer)
-    performance_rating = Column(Integer)
-    relationship_satisfaction = Column(Integer)
-    stock_option_level = Column(Integer)
-    total_working_years = Column(Integer)
-    training_times_last_year = Column(Integer)
-    work_life_balance = Column(Integer)
-    years_at_company = Column(Integer)
-    years_in_current_role = Column(Integer)
-    years_since_last_promotion = Column(Integer)
-    years_with_curr_manager = Column(Integer)
+    educationfield = Column(String(50))
+    environmentsatisfaction = Column(Integer)
+    hourlyrate = Column(Integer)
+    jobinvolvement = Column(Integer)
+    joblevel = Column(Integer)
+    jobrole = Column(String(50))
+    jobsatisfaction = Column(Integer)
+    maritalstatus = Column(String(50))
+    monthlyincome = Column(Integer)
+    monthlyrate = Column(Integer)
+    numcompaniesworked = Column(Integer)
+    overtime = Column(String(10))
+    percentsalaryhike = Column(Integer)
+    performancerating = Column(Integer)
+    relationshipsatisfaction = Column(Integer)
+    stockoptionlevel = Column(Integer)
+    totalworkingyears = Column(Integer)
+    trainingtimeslastyear = Column(Integer)
+    worklifebalance = Column(Integer)
+    yearsatcompany = Column(Integer)
+    yearsincurrentrole = Column(Integer)
+    yearssincelastpromotion = Column(Integer)
+    yearswithcurrmanager = Column(Integer)
