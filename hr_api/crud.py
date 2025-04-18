@@ -25,3 +25,26 @@ def get_kpi_summary(db: Session):
         "avg_age": round(avg_age, 1) if avg_age else None,
         "avg_tenure": round(avg_tenure, 1) if avg_tenure else None
     }
+
+
+# Return department-level summary statistics for the HR dashboard
+def get_departments_summary(db):
+    results = (
+        db.query(
+            models.Employee.department.label("department"),
+            func.count().label("headcount"),
+            func.avg(models.Employee.monthlyincome).label("avg_income")
+        )
+        .group_by(models.Employee.department)
+        .all()
+    )
+
+    # Convert results into list of dictionaries
+    return [
+        {
+            "department": dept,
+            "headcount": count,
+            "avg_income": round(avg_income, 2) if avg_income else None
+        }
+        for dept, count, avg_income in results
+    ]

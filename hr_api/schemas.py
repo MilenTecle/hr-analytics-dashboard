@@ -46,3 +46,10 @@ class KPISummary(BaseModel):
     headcount: int
     avg_age: float | None
     avg_tenure: float | None
+
+
+# Pydantic schema for department summary response
+class DepartmentSummary(BaseModel):
+    department: str
+    headcount: int
+    avg_income: float | None

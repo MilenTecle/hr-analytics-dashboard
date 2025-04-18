@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from . import schemas, crud
-from .database import SessionLocal
+from .database import SessionLocal, get_db
 
 app = FastAPI(title="HR Dashboard API")
 
@@ -32,3 +32,9 @@ def read_employees(db: Session = Depends(get_db)):
 @app.get("/kpi-summary", response_model=schemas.KPISummary)
 def read_kpi_summary(db: Session = Depends(get_db)):
     return crud.get_kpi_summary(db)
+
+
+# GET /departments - return department-wise headcount and average income
+@app.get("/departments", response_model=list[schemas.DepartmentSummary])
+def read_departments_summary(db: Session = Depends(get_db)):
+    return crud.get_departments_summary(db)
