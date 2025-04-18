@@ -53,3 +53,8 @@ class DepartmentSummary(BaseModel):
     department: str
     headcount: int
     avg_income: float | None
+
+
+# Pydantic schema for attrition rate response
+class AttritionRate(BaseModel):
+    attrition_rate: float | None

@@ -48,3 +48,23 @@ def get_departments_summary(db):
         }
         for dept, count, avg_income in results
     ]
+
+
+# Return attrition rate (percentage of employees who left)
+def get_attrition_rate(db: Session, gender: str = None, department: str = None):
+    query = db.query(models.Employee)
+
+    # Optional filters
+    if gender:
+        query = query.filter(models.Employee.gender == gender)
+    if department:
+        query = query.filter(models.Employee.department == department)
+
+    total = query.count()
+    attritions = query.filter(models.Employee.attrition == "Yes").count()
+
+    if total == 0:
+        return {"attrition_rate": None}  # avoid division by zero
+
+    rate = round((attritions / total) * 100, 2)
+    return {"attrition_rate": rate}

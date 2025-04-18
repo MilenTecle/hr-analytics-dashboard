@@ -38,3 +38,13 @@ def read_kpi_summary(db: Session = Depends(get_db)):
 @app.get("/departments", response_model=list[schemas.DepartmentSummary])
 def read_departments_summary(db: Session = Depends(get_db)):
     return crud.get_departments_summary(db)
+
+
+# GET /attrition-rate - return overall or filtered attrition rate
+@app.get("/attrition-rate")
+def read_attrition_rate(
+    gender: str = None,
+    department: str = None,
+    db: Session = Depends(get_db)
+):
+    return crud.get_attrition_rate(db, gender=gender, department=department)
