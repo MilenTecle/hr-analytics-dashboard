@@ -56,5 +56,5 @@ class DepartmentSummary(BaseModel):
 
 
 # Pydantic schema for attrition rate response
-class AttritionRate(BaseModel):
+class AttritionRateResponse(BaseModel):
     attrition_rate: float | None

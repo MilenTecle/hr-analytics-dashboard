@@ -3,14 +3,20 @@ from sqlalchemy import func
 from . import models
 
 
-# Return all employees in the database
+# Return paginated list of employees in the database
 # and filter to only return rows with complete info
-def get_all_employees(db: Session):
-    return db.query(models.Employee).filter(
-        models.Employee.monthlyincome != None,
-        models.Employee.jobrole != None,
-        models.Employee.performancerating != None,
-    ).all()
+def get_all_employees(db: Session, skip: int = 0, limit: int = 100):
+    return (
+        db.query(models.Employee)
+        .filter(
+            models.Employee.monthlyincome != None,
+            models.Employee.jobrole != None,
+            models.Employee.performancerating != None,
+        )
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 
 # Return summary KPIs for the HR dashboard
