@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
 
 
+# Pydantic schema used for serializing employee data returned by the API
+# Matches the structure of the Employee model and supports JSON response formatting
 class EmployeeBase(BaseModel):
     age: int
     gender: str
@@ -37,3 +39,10 @@ class EmployeeBase(BaseModel):
 
     class Config:
         from_attributes = True  # Pydantic v2+
+
+
+# Pydantic schema for KPI summary response
+class KPISummary(BaseModel):
+    headcount: int
+    avg_age: float | None
+    avg_tenure: float | None
