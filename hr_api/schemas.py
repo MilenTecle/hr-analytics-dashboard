@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 # Pydantic schema used for serializing employee data returned by the API
 # Matches the structure of the Employee model and supports JSON response formatting
 class EmployeeBase(BaseModel):
+    employee_id: int
     age: int
     gender: str
     department: str

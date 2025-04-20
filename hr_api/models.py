@@ -6,12 +6,12 @@ class Employee(Base):
     __tablename__ = "employees"
     __table_args__ = {'extend_existing': True}
 
-    # Composite primary key
-    age = Column(Integer, primary_key=True)
-    gender = Column(String(10), primary_key=True)
-    department = Column(String(50), primary_key=True)
+    employee_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
 
-    # Remaining fields
+    # Fields
+    age = Column(Integer)
+    gender = Column(String(10))
+    department = Column(String(50))
     attrition = Column(String(50))
     businesstravel = Column(String(50))
     dailyrate = Column(Integer)
