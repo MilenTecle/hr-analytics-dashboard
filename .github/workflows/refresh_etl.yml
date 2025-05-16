@@ -26,4 +26,5 @@ jobs:
     - name: Run ETL script
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        CSV_PATH: data/cleaned_hr_data_final.csv
       run: python etl/run_etl.py

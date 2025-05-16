@@ -6,8 +6,8 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import DATABASE_URL
 
-# Path to the cleaned HR data CSV file
-CSV_PATH = "./cleaned_hr_data_final.csv"
+# Get CSV path from environment variable, or use default fallback
+CSV_PATH = os.getenv("CSV_PATH", "data/cleaned_hr_data_final.csv")
 
 # Target table in the PostgreSQL database
 TABLE_NAME = "employees"
