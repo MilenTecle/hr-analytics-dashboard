@@ -3,8 +3,10 @@ from fastapi import FastAPI, Depends, Query
 from sqlalchemy.orm import Session
 from . import schemas, crud
 from .database import SessionLocal, get_db
+from .refresh import router as refresh_router
 
 app = FastAPI(title="HR Dashboard API")
+app.include_router(refresh_router)
 
 
 # Dependency for DB session
