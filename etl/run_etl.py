@@ -76,7 +76,7 @@ def refresh_table(df):
     for _, row in df.iterrows():
         cursor.execute(f"""
             INSERT INTO {TABLE_NAME} (employee_id, age, gender, jobrole, attrition, monthlyincome)
-            VALUES (%s, %s, %s), %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s)
             """, (
                 int(row["employee_id"]),
                 int(row["age"]),
