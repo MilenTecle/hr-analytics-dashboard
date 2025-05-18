@@ -28,8 +28,8 @@ def read_root():
 # Supports skip & limit query parameters for pagination
 @app.get("/employees", response_model=list[schemas.EmployeeBase])
 def read_employees(
-    skip: int = Query(0, ge=0), 
-    limit: int = Query(100, le=1000), 
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, le=1000),
     db: Session = Depends(get_db)
 ):
     return crud.get_all_employees(db, skip=skip, limit=limit)

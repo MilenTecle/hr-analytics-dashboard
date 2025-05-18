@@ -31,7 +31,7 @@ class EmployeeBase(BaseModel):
     stockoptionlevel: int
     totalworkingyears: int
     trainingtimeslastyear: int
-    
+
     # Fix aliases for snake_case expectations
     years_at_company: int = Field(alias="yearsatcompany")
     years_in_current_role: int = Field(alias="yearsincurrentrole")

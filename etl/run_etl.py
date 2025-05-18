@@ -1,16 +1,17 @@
+from config import DATABASE_URL
 import pandas as pd
 import psycopg2
 from urllib.parse import urlparse
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import DATABASE_URL
 
 # Get CSV path from environment variable, or use default fallback
 CSV_PATH = os.getenv("CSV_PATH", "data/cleaned_hr_data_final.csv")
 
 # Target table in the PostgreSQL database
 TABLE_NAME = "employees"
+
 
 def connect():
     """"
@@ -19,7 +20,7 @@ def connect():
     """
     result = urlparse(DATABASE_URL)
     return psycopg2.connect(
-        dbname=result.path[1:], # Strip leading slash from /dbname
+        dbname=result.path[1:],  # Strip leading slash from /dbname
         user=result.username,
         password=result.password,
         host=result.hostname,
@@ -53,7 +54,8 @@ def load_csv():
     if "employee_id" not in df.columns:
         df.insert(0, "employee_id", range(1, len(df) + 1))
 
-    expected_columns = ["employee_id", "age", "gender", "jobrole", "attrition", "monthlyincome"]
+    expected_columns = ["employee_id", "age", "gender",
+                        "jobrole", "attrition", "monthlyincome"]
     missing = [col for col in expected_columns if col not in df.columns]
     if missing:
         raise ValueError(f"CSV is missing required columns: {missing}")
@@ -70,26 +72,26 @@ def refresh_table(df):
     cursor = conn.cursor()
 
     print("Truncating table...")
-    cursor.execute(f"TRUNCATE TABLE {TABLE_NAME}")  # Clears all existing data
+    cursor.execute(f"TRUNCATE TABLE {TABLE_NAME}")
 
-    print("Instering new records...")
+    print("Inserting new records...")
     for _, row in df.iterrows():
         cursor.execute(f"""
             INSERT INTO {TABLE_NAME} (employee_id, age, gender, jobrole, attrition, monthlyincome)
             VALUES (%s, %s, %s, %s, %s, %s)
-            """, (
-                int(row["employee_id"]),
-                int(row["age"]),
-                row["gender"],
-                row["jobrole"],
-                row["attrition"],
-                int(row["monthlyincome"])
-            ))
-        
-        conn.commit()
-        cursor.close()
-        conn.close()
-        print(f"ETL complete: {len(df)} records inserted into '{TABLE_NAME}'.")
+        """, (
+            int(row["employee_id"]),
+            int(row["age"]),
+            row["gender"],
+            row["jobrole"],
+            row["attrition"],
+            int(row["monthlyincome"])
+        ))
+
+    conn.commit()         # Commit after all inserts
+    cursor.close()        # Close cursor and connection here
+    conn.close()
+    print(f"ETL complete: {len(df)} records inserted into '{TABLE_NAME}'.")
 
 
 def main():

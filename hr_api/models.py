@@ -2,11 +2,14 @@ from sqlalchemy import Column, Integer, String
 from .database import Base
 
 # SQLAlchemy model that maps to the "employees" table in PostgreSQL
+
+
 class Employee(Base):
     __tablename__ = "employees"
     __table_args__ = {'extend_existing': True}
 
-    employee_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    employee_id = Column(Integer, primary_key=True,
+                         index=True, autoincrement=True)
 
     # Fields
     age = Column(Integer)

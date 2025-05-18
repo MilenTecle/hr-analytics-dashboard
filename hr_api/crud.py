@@ -22,7 +22,8 @@ def get_all_employees(db: Session, skip: int = 0, limit: int = 100):
 # Return summary KPIs for the HR dashboard
 # Includes total headcount, average age, and average tenure
 def get_kpi_summary(db: Session):
-    total_employees = db.query(func.count()).select_from(models.Employee).scalar()
+    total_employees = db.query(func.count()).select_from(
+        models.Employee).scalar()
     avg_age = db.query(func.avg(models.Employee.age)).scalar()
     avg_tenure = db.query(func.avg(models.Employee.yearsatcompany)).scalar()
 
