@@ -1,10 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import DATABASE_URL
 import pandas as pd
 import psycopg2
 from urllib.parse import urlparse
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
 
 # Get CSV path from environment variable, or use default fallback
 CSV_PATH = os.getenv("CSV_PATH", "data/cleaned_hr_data_final.csv")
