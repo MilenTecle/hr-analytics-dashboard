@@ -26,13 +26,23 @@ def connect():
         port=result.port
     )
 
+
 def load_csv():
     """
     Load the cleaned HR data from CSV, normalize column names,
-    and ensure requried fields exist.
+    and ensure required fields exist. Falls back to example CSV if real one is missing.
     """
-    df = pd.read_csv(CSV_PATH)
-    df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")   # Removes leading/traling spaces and convert column names to lowercase
+    if not os.path.exists(CSV_PATH):
+        print(f"{CSV_PATH} not found. Falling back to example CSV.")
+        fallback_path = "data/cleaned_hr_data_final.example.csv"
+        if not os.path.exists(fallback_path):
+            raise FileNotFoundError("Neither real nor fallback CSV found.")
+        use_path = fallback_path
+    else:
+        use_path = CSV_PATH
+
+    df = pd.read_csv(use_path)
+    df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
 
     # Rename expected columns if needed
     df.rename(columns={
@@ -49,6 +59,7 @@ def load_csv():
         raise ValueError(f"CSV is missing required columns: {missing}")
 
     return df
+
 
 def refresh_table(df):
     """
@@ -80,6 +91,7 @@ def refresh_table(df):
         conn.close()
         print(f"ETL complete: {len(df)} records inserted into '{TABLE_NAME}'.")
 
+
 def main():
     """
     Main entry point for the ETL script.
@@ -88,6 +100,7 @@ def main():
     print("Starting ETL job...")
     df = load_csv()
     refresh_table(df)
+
 
 # Execute the script
 if __name__ == "__main__":
