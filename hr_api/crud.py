@@ -11,7 +11,6 @@ def get_all_employees(db: Session, skip: int = 0, limit: int = 100):
         .filter(
             models.Employee.monthlyincome != None,
             models.Employee.jobrole != None,
-            models.Employee.performancerating != None,
         )
         .offset(skip)
         .limit(limit)
