@@ -33,7 +33,7 @@ def refresh_employees(db: Session = Depends(get_db)):
             # Insert each row into the database as an Employee object
             for _, row in df.iterrows():
                 emp = Employee(
-                    employee_id=row["emplyee_id"],
+                    employee_id=row["employee_id"],
                     age=row["age"],
                     gender=row["gender"],
                     jobrole=row["jobrole"],
