@@ -9,8 +9,8 @@ def get_all_employees(db: Session, skip: int = 0, limit: int = 100):
     return (
         db.query(models.Employee)
         .filter(
-            models.Employee.monthlyincome != None,
-            models.Employee.jobrole != None,
+            models.Employee.monthlyincome.isnot(None),
+            models.Employee.jobrole.isnot(None)
         )
         .offset(skip)
         .limit(limit)
