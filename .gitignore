@@ -38,6 +38,9 @@ Thumbs.db
 # CSV data files
 *.csv
 
+# Example csv file
+!data/cleaned_hr_data_final.example.csv
+
 # Project-specific secrets
 .env
 

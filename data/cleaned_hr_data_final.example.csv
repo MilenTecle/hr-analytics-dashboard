@@ -1,0 +1,6 @@
+﻿age,attrition,businesstravel,dailyrate,department,distancefromhome,education,educationfield,environmentsatisfaction,gender,hourlyrate,jobinvolvement,joblevel,jobrole,jobsatisfaction,maritalstatus,monthlyincome,monthlyrate,numcompaniesworked,overtime,percentsalaryhike,performancerating,relationshipsatisfaction,stockoptionlevel,totalworkingyears,trainingtimeslastyear,worklifebalance,yearsatcompany,yearsincurrentrole,yearssincelastpromotion,yearswithcurrmanager
+35,Yes,Travel_Rarely,1200,Sales,3,3,Life Sciences,3,Female,70,3,2,Sales Executive,4,Single,5200,21000,2,Yes,13,3,2,1,7,2,3,4,3,0,2
+42,No,Travel_Frequently,1500,Research & Development,5,2,Medical,4,Male,65,2,2,Research Scientist,3,Married,6100,25000,1,No,12,4,3,1,10,3,2,9,6,2,5
+28,Yes,Travel_Rarely,900,Research & Development,1,1,Other,2,Female,60,3,1,Laboratory Technician,2,Single,3100,18000,3,Yes,11,3,4,0,5,3,3,2,1,1,1
+39,No,Travel_Frequently,1350,HR,4,4,Human Resources,3,Male,80,4,3,HR Manager,4,Married,6800,23000,4,No,10,3,3,1,14,4,3,11,9,2,6
+30,No,Travel_Rarely,1100,Sales,2,2,Life Sciences,2,Female,55,3,1,Sales Representative,3,Single,4200,20000,2,Yes,14,3,2,0,6,2,3,3,2,1,3
