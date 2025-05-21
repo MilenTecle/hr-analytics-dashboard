@@ -68,7 +68,7 @@ def load_csv():
 def refresh_table(df):
     """
     Replace all records in the 'employees' table with the latest data from the CSV.
-    This uses a truncate-and-replace strategy for simplicity.
+    This uses a truncate-and-replace strategy.
     """
     conn = connect()
     cursor = conn.cursor()
@@ -78,20 +78,45 @@ def refresh_table(df):
 
     print("Inserting new records...")
     for _, row in df.iterrows():
-        cursor.execute(f"""
-            INSERT INTO {TABLE_NAME} (employee_id, age, gender, jobrole, attrition, monthlyincome)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (
-            int(row["employee_id"]),
-            int(row["age"]),
-            row["gender"],
-            row["jobrole"],
-            row["attrition"],
-            int(row["monthlyincome"])
-        ))
+        try:
+            values = [row.get(col, None) for col in [
+                'employee_id', 'age', 'gender', 'department', 'attrition',
+                'businesstravel', 'dailyrate', 'distancefromhome', 'education',
+                'educationfield', 'environmentsatisfaction', 'hourlyrate',
+                'jobinvolvement', 'joblevel', 'jobrole', 'jobsatisfaction',
+                'maritalstatus', 'monthlyincome', 'monthlyrate',
+                'numcompaniesworked', 'overtime', 'percentsalaryhike',
+                'performancerating', 'relationshipsatisfaction',
+                'stockoptionlevel', 'totalworkingyears',
+                'trainingtimeslastyear', 'worklifebalance',
+                'yearsatcompany', 'yearsincurrentrole',
+                'yearssincelastpromotion', 'yearswithcurrmanager'
+            ]]
+            cursor.execute(
+                f"""
+                INSERT INTO {TABLE_NAME} (
+                    employee_id, age, gender, department, attrition,
+                    businesstravel, dailyrate, distancefromhome, education,
+                    educationfield, environmentsatisfaction, hourlyrate,
+                    jobinvolvement, joblevel, jobrole, jobsatisfaction,
+                    maritalstatus, monthlyincome, monthlyrate,
+                    numcompaniesworked, overtime, percentsalaryhike,
+                    performancerating, relationshipsatisfaction,
+                    stockoptionlevel, totalworkingyears,
+                    trainingtimeslastyear, worklifebalance,
+                    yearsatcompany, yearsincurrentrole,
+                    yearssincelastpromotion, yearswithcurrmanager
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                          %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                values
+            )
+        except Exception as e:
+            print(f"Error inserting row: {e}")
+            continue
 
-    conn.commit()         # Commit after all inserts
-    cursor.close()        # Close cursor and connection here
+    conn.commit()
+    cursor.close()
     conn.close()
     print(f"ETL complete: {len(df)} records inserted into '{TABLE_NAME}'.")
 
