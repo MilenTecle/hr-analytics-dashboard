@@ -26,7 +26,8 @@ def connect():
         user=result.username,
         password=result.password,
         host=result.hostname,
-        port=result.port
+        port=result.port,
+        sslmode='require'
     )
 
 
