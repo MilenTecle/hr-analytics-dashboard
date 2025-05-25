@@ -5,11 +5,16 @@ from config import DATABASE_URL
 import pandas as pd
 import psycopg2
 from urllib.parse import urlparse
+from dotenv import load_dotenv
+load_dotenv()
 
+# Use local full dataset only if running manually
+IS_LOCAL = os.getenv("RUN_LOCAL", "false").lower() == "true"
 
-
-# Get CSV path from environment variable, or use default fallback
-CSV_PATH = os.getenv("CSV_PATH", "data/cleaned_hr_data_final.csv")
+if IS_LOCAL:
+    CSV_PATH = "data/cleaned_hr_data_final.csv"
+else:
+    CSV_PATH = "data/cleaned_hr_data_final.example.csv"
 
 # Target table in the PostgreSQL database
 TABLE_NAME = "employees"
