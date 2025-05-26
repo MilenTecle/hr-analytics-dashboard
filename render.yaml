@@ -8,3 +8,15 @@ services:
       - key: DATABASE_URL
         sync: false
     plan: free
+
+  - type: web
+    name: hr-dashboard
+    runtime: docker
+    buildCommand: ""
+    startCommand: ""
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: IS_TEMPLATE
+        value: false
+    plan: free
