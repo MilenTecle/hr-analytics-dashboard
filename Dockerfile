@@ -1,28 +1,24 @@
-# ---- Base image ----
+# Start from the official Python image
 FROM python:3.10-slim
 
-# ---- Set environment variables ----
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# ---- Set working directory ----
+# Set working directory
 WORKDIR /app
 
-# ---- Install system dependencies ----
+# Install system dependencies, including git
 RUN apt-get update && \
-    apt-get install -y build-essential && \
+    apt-get install -y git && \
     apt-get clean
 
-# ---- Install Python dependencies ----
+# Copy requirements and install dependencies
 COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# ---- Copy application files ----
+# Copy rest of the app
 COPY . .
 
-# ---- Expose Streamlit port ----
+# Expose Streamlit port
 EXPOSE 8501
 
-# ---- Start the app ----
+# Run Streamlit app
 CMD ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.enableCORS=false"]
