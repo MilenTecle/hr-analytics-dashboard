@@ -124,10 +124,10 @@ def render_employee_data():
 # ------------------------
 
 
-#  if authenticate_user():
-#     with st.spinner("Loading dashboard..."):
-#         st.title("HR Dashboard")
-#         render_kpi_summary()
-#         render_department_chart()
-#         render_attrition_metrics()
-#         render_employee_data()
+# if authenticate_user():
+with st.spinner("Loading dashboard..."):
+    st.title("HR Dashboard")
+    render_kpi_summary()
+    render_department_chart()
+    render_attrition_metrics()
+    render_employee_data()
