@@ -2,108 +2,132 @@ import streamlit as st
 import pandas as pd
 import requests
 import plotly.express as px
-import streamlit_authenticator as stauth
+
+# --- TEMPORARILY DISABLED AUTHENTICATION ---
+# import streamlit_authenticator as stauth
+
+# ------------------------
+# Authentication Setup
+# ------------------------
+# credentials = {
+#     "usernames": {
+#         "admin": {
+#             "name": "HR Admin",
+#             "password": "admin123"
+#         }
+#     }
+# }
+
+# authenticator = stauth.Authenticate(
+#     credentials,
+#     "hr_dashboard_cookie",
+#     "random_signature_key",
+#     cookie_expiry_days=1
+# )
 
 
-credentials = {
-    "usernames": {
-        "admin": {
-            "name": "HR Admin",
-            "password": "admin123"
-        }
-    }
-}
+# def authenticate_user():
+#     login_result = authenticator.login(location="main", key="auth")
+#     if login_result:
+#         name, authentication_status, username = login_result
+#         if authentication_status:
+#             authenticator.logout("Logout", "sidebar")
+#             st.sidebar.success(f"Welcome {name} \U0001F44B")
+#             return True
+#         elif authentication_status is False:
+#             st.error("Username/password is incorrect")
+#         elif authentication_status is None:
+#             st.warning("Please enter your username and password")
+#     else:
+#         st.warning("Login form not rendered correctly.")
+#     return False
 
-authenticator = stauth.Authenticate(
-    credentials,
-    "hr_dashboard_cookie",
-    "random_signature_key",
-    cookie_expiry_days=1
-)
+# ------------------------
+# API Utilities
+# ------------------------
 
-login_result = authenticator.login(location="main", key="auth")
 
-if login_result is not None:
-    name, authentication_status, username = login_result
+API_BASE = "https://hr-analytics-dashboard.onrender.com"
 
-    if authentication_status:
-        authenticator.logout("Logout", "sidebar")
-        st.sidebar.success(f"Welcome {name} 👋")
-        st.write("Dashboard content goes here.")
-    elif authentication_status is False:
-        st.error("Username/password is incorrect")
-    elif authentication_status is None:
-        st.warning("Please enter your username and password")
-else:
-    st.warning("Login form not rendered correctly.")
 
-    # Main HR Dashboard App
-    # -----------------------
+def fetch_api_data(endpoint):
+    try:
+        response = requests.get(f"{API_BASE}{endpoint}")
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        st.error(f"Error fetching data from {endpoint}: {e}")
+        st.stop()
 
-    # API endpoints
-    API_BASE = "https://hr-analytics-dashboard.onrender.com"
+# ------------------------
+# Dashboard Components
+# ------------------------
 
-    # Load KPI Summary
-    kpi_data = requests.get(f"{API_BASE}/kpi-summary").json()
 
-    # Header Metrics
-    st.title("HR Dashboard")
+def render_kpi_summary():
+    data = fetch_api_data("/kpi-summary")
     col1, col2, col3 = st.columns(3)
-    col1.metric("Headcount", kpi_data['headcount'])
-    col2.metric("Avg Tenure", kpi_data['avg_tenure'])
-    col3.metric("Avg Age", kpi_data['avg_age'])
+    col1.metric("Headcount", data['headcount'])
+    col2.metric("Avg Tenure", data['avg_tenure'])
+    col3.metric("Avg Age", data['avg_age'])
 
-    # Load Department Summary
-    dept_data = pd.DataFrame(requests.get(f"{API_BASE}/departments").json())
 
-    # Bar + Line Combo: Headcount vs Avg Income
-    fig_combo = px.bar(dept_data, x="department", y="headcount",
-                       title="Headcount and Avg Income by Department")
-    fig_combo.add_scatter(
-        x=dept_data['department'], y=dept_data['avg_income'], name="Avg Income", yaxis="y2")
-    fig_combo.update_layout(yaxis2=dict(overlaying='y', side='right'))
-    st.plotly_chart(fig_combo, use_container_width=True)
+def render_department_chart():
+    dept_data = pd.DataFrame(fetch_api_data("/departments"))
+    fig = px.bar(dept_data, x="department", y="headcount",
+                 title="Headcount and Avg Income by Department")
+    fig.add_scatter(x=dept_data['department'], y=dept_data['avg_income'],
+                    name="Avg Income", yaxis="y2")
+    fig.update_layout(yaxis2=dict(overlaying='y', side='right'))
+    st.plotly_chart(fig, use_container_width=True)
 
-    # Attrition Rate KPIs
+
+def render_attrition_metrics():
     st.subheader("Attrition Rates")
-    attrition_all = requests.get(
-        f"{API_BASE}/attrition-rate").json()["attrition_rate"]
-    attrition_female = requests.get(
-        f"{API_BASE}/attrition-rate?gender=Female").json()["attrition_rate"]
-    attrition_sales = requests.get(
-        f"{API_BASE}/attrition-rate?department=Sales").json()["attrition_rate"]
-    attrition_male_rnd = requests.get(
-        f"{API_BASE}/attrition-rate?gender=Male&department=Research%20%26%20Development").json()["attrition_rate"]
+    total = fetch_api_data("/attrition-rate")['attrition_rate']
+    female = fetch_api_data("/attrition-rate?gender=Female")['attrition_rate']
+    sales = fetch_api_data("/attrition-rate?department=Sales")['attrition_rate']
+    male_rnd = fetch_api_data(
+        "/attrition-rate?gender=Male&department=Research%20%26%20Development")['attrition_rate']
 
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Total", f"{attrition_all}%")
-    col2.metric("Female", f"{attrition_female}%")
-    col3.metric("Sales", f"{attrition_sales}%")
-    col4.metric("Male in R&D", f"{attrition_male_rnd}%")
+    col1.metric("Total", f"{total}%")
+    col2.metric("Female", f"{female}%")
+    col3.metric("Sales", f"{sales}%")
+    col4.metric("Male in R&D", f"{male_rnd}%")
 
-   # Load & Display Employees Table
-st.subheader("Employee Data")
-response = requests.get(f"{API_BASE}/employees")
-employees_raw = response.json()
 
-# Check if API returned expected data
-if isinstance(employees_raw, list) and all(isinstance(row, dict) for row in employees_raw):
-    employees = pd.DataFrame(employees_raw)
-    st.dataframe(employees, use_container_width=True)
+def render_employee_data():
+    st.subheader("Employee Data")
+    raw = fetch_api_data("/employees")
 
-    # Bar Charts
-    st.subheader("Distributions")
-    col1, col2 = st.columns(2)
+    if isinstance(raw, list) and all(isinstance(row, dict) for row in raw):
+        df = pd.DataFrame(raw)
+        st.dataframe(df, use_container_width=True)
 
-    fig1 = px.histogram(employees, x="department", color="attrition",
-                        barmode="group", title="Attrition by Department")
-    col1.plotly_chart(fig1, use_container_width=True)
+        st.subheader("Distributions")
+        col1, col2 = st.columns(2)
 
-    fig2 = px.histogram(employees, x="department", color="gender",
-                        barmode="group", title="Gender by Department")
-    col2.plotly_chart(fig2, use_container_width=True)
-else:
-    st.error(
-        "⚠️ Could not fetch employee data. Are you logged in? Is the API reachable?")
-    st.write("Raw API response:")
-    st.write(employees_raw)
+        fig1 = px.histogram(df, x="department", color="attrition",
+                            barmode="group", title="Attrition by Department")
+        col1.plotly_chart(fig1, use_container_width=True)
+
+        fig2 = px.histogram(df, x="department", color="gender",
+                            barmode="group", title="Gender by Department")
+        col2.plotly_chart(fig2, use_container_width=True)
+    else:
+        st.error("⚠️ Could not fetch employee data.")
+        st.write("Raw response:", raw)
+
+# ------------------------
+# Run App
+# ------------------------
+
+
+if authenticate_user():
+    with st.spinner("Loading dashboard..."):
+        st.title("HR Dashboard")
+        render_kpi_summary()
+        render_department_chart()
+        render_attrition_metrics()
+        render_employee_data()
