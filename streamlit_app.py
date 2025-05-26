@@ -5,7 +5,6 @@ import plotly.express as px
 import streamlit_authenticator as stauth
 
 
-# Credentials
 credentials = {
     "usernames": {
         "admin": {
@@ -15,7 +14,6 @@ credentials = {
     }
 }
 
-# Setup
 authenticator = stauth.Authenticate(
     credentials,
     "hr_dashboard_cookie",
@@ -23,19 +21,21 @@ authenticator = stauth.Authenticate(
     cookie_expiry_days=1
 )
 
-# This now works with the GitHub version
-name, authentication_status, username = authenticator.login(
-    form_name="Login", location="main"
-)
+login_result = authenticator.login(location="main", key="auth")
 
-if authentication_status is False:
-    st.error("Username/password is incorrect")
-elif authentication_status is None:
-    st.warning("Please enter your username and password")
-elif authentication_status:
-    authenticator.logout("Logout", "sidebar")
-    st.sidebar.success(f"Welcome {name} 👋")
-    st.write("Dashboard content goes here.")
+if login_result is not None:
+    name, authentication_status, username = login_result
+
+    if authentication_status:
+        authenticator.logout("Logout", "sidebar")
+        st.sidebar.success(f"Welcome {name} 👋")
+        st.write("Dashboard content goes here.")
+    elif authentication_status is False:
+        st.error("Username/password is incorrect")
+    elif authentication_status is None:
+        st.warning("Please enter your username and password")
+else:
+    st.warning("Login form not rendered correctly.")
 
     # Main HR Dashboard App
     # -----------------------
@@ -81,10 +81,14 @@ elif authentication_status:
     col3.metric("Sales", f"{attrition_sales}%")
     col4.metric("Male in R&D", f"{attrition_male_rnd}%")
 
-    # Load & Display Employees Table
-    st.subheader("Employee Data")
-    employees = pd.DataFrame(requests.get(
-        f"{API_BASE}/employees?limit=2000").json())
+   # Load & Display Employees Table
+st.subheader("Employee Data")
+response = requests.get(f"{API_BASE}/employees")
+employees_raw = response.json()
+
+# Check if API returned expected data
+if isinstance(employees_raw, list) and all(isinstance(row, dict) for row in employees_raw):
+    employees = pd.DataFrame(employees_raw)
     st.dataframe(employees, use_container_width=True)
 
     # Bar Charts
@@ -98,3 +102,8 @@ elif authentication_status:
     fig2 = px.histogram(employees, x="department", color="gender",
                         barmode="group", title="Gender by Department")
     col2.plotly_chart(fig2, use_container_width=True)
+else:
+    st.error(
+        "⚠️ Could not fetch employee data. Are you logged in? Is the API reachable?")
+    st.write("Raw API response:")
+    st.write(employees_raw)

@@ -8,13 +8,15 @@ from urllib.parse import urlparse
 from dotenv import load_dotenv
 load_dotenv()
 
-# Use local full dataset only if running manually
-IS_LOCAL = os.getenv("RUN_LOCAL", "false").lower() == "true"
+# Use fallback example data in templates or CI environments
+# If IS_TEMPLATE is set to "true", load the safe example dataset.
+# Otherwise, use the full real dataset (only available locally and ignored by Git).
+IS_TEMPLATE = os.getenv("IS_TEMPLATE", "true").lower() == "true"
 
-if IS_LOCAL:
-    CSV_PATH = "data/cleaned_hr_data_final.csv"
-else:
+if IS_TEMPLATE:
     CSV_PATH = "data/cleaned_hr_data_final.example.csv"
+else:
+    CSV_PATH = "data/cleaned_hr_data_final.csv"
 
 # Target table in the PostgreSQL database
 TABLE_NAME = "employees"

@@ -1,8 +1,8 @@
 name: Scheduled ETL Refresh
 
 on:
-  schedule:
-    - cron: "0 6 * * *"  # Runs every day at 6 AM UTC
+  # schedule:
+  #  - cron: "0 6 * * *"  # Runs every day at 6 AM UTC
   workflow_dispatch:     # Allows manual triggering from GitHub UI
 
 jobs:
@@ -26,5 +26,5 @@ jobs:
     - name: Run ETL script
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        CSV_PATH: data/cleaned_hr_data_final.csv
+        IS_TEMPLATE: "true"
       run: python etl/run_etl.py
