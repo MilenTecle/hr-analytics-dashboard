@@ -142,7 +142,9 @@ Steps:
 
 ## Authentication (Optional)
 
-This template supports Streamlit Authenticator. You can enable password login by modifying:
+Authentication is disabled for demo purposes to allow public access to the dashboard.
+This template supports Streamlit Authenticator.
+Uncomment the relevant code and define credentials to restrict access.
 
 ```python
 # streamlit_app.py
